@@ -56,6 +56,16 @@ body {
   display: inline-block;
   font-weight: 600;
 }
+.light-box-info{
+  position: fixed;
+  width:100%;
+  height: 100%;
+  top:0;
+  left:0;
+  z-index:1999;
+  background:rgba(0,0,0,.7);
+  display: none;
+}
 
 .subtit {
   font-size: .7rem;
@@ -105,7 +115,25 @@ body {
 .pragrah span.ph {
   float: left;
 }
-
+.pragrah .light{
+  display: block;
+  width:.8rem;
+  height:.8rem;
+  border-radius: 50%;
+  position: absolute;
+  top:50%;
+  margin-top: -.4rem;
+  right:0;
+}
+.pragrah .light.red{
+  background: #fc605c;
+}
+.pragrah .light.base{
+  background: #fec041;
+}
+.pragrah .light.warn.green{
+  background: #34c749;
+}
 .pragrah span.pb {
   color: #f28227;
   font-weight: 600;
@@ -113,6 +141,9 @@ body {
   padding-left: 2px;
   float: right;
   text-align: right;
+}
+.pragrah .light + .pb{
+  padding-right: 1rem;
 }
 
 .top3 {

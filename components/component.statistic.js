@@ -39,6 +39,12 @@ var statistic = Vue.component('statistic', {
   name: 'statistic',
   data: function () {
     return {
+      lightBoxInfo:{
+        workdayRange:[1231231313,1531231313],
+        weekendRange:[1231231313,1531231313],
+        state: 0,
+        info:'依据依据依据依据依据'
+      },
       mallid: 2,
       market: '壹方',
       markets: ['新天地|1', '壹方|2'],
@@ -722,16 +728,17 @@ var statistic = Vue.component('statistic', {
                   <div class="flex" style="margin-left:-.3rem;margin-right:-.3rem;">\
                     <div class="cur-day">\
                       <p class="pragrah">\
-                        <span class="ph">总销售:</span>\
-                        <span class="pb">{{comdify(staticsData.day_sales)}}</span>\
+                        <span class="ph">总营业额:</span>\
+                        <i class="light base"></i>\
+                        <span class="pb">{{comdify(Math.round(staticsData.day_sales))}}</span>\
                       </p>\
                       <p class="pragrah">\
-                        <span class="ph">总进店人数:</span>\
-                        <span class="pb">{{comdify(staticsData.visitor_count)}}</span>\
-                      </p>\
-                      <p class="pragrah">\
-                        <span class="ph">总面积:</span>\
+                        <span class="ph">开业面积:</span>\
                         <span class="pb">{{comdify(staticsData.all_area)}}</span>\
+                      </p>\
+                      <p class="pragrah">\
+                        <span class="ph">30天月化坪效:</span>\
+                        <span class="pb">{{comdify(Math.round(staticsData.day_sales/staticsData.all_area*30))}}</span>\
                       </p>\
                     </div>\
                     <div class="cur-day">\
@@ -739,9 +746,9 @@ var statistic = Vue.component('statistic', {
                         <span class="ph">客流量:</span>\
                         <span class="pb">{{comdify(staticsData.customer_count)}}</span>\
                       </p>\
-                      <p class="pragrah" style="opacity:0">\
-                        <span class="ph">车流量:</span>\
-                        <span class="pb">{{comdify(staticsData.car_count)}}</span>\
+                      <p class="pragrah">\
+                        <span class="ph">总进店人数:</span>\
+                        <span class="pb">{{comdify(staticsData.visitor_count)}}</span>\
                       </p>\
                       <p class="pragrah">\
                         <span class="ph">车流量:</span>\
@@ -847,5 +854,6 @@ var statistic = Vue.component('statistic', {
               <p  v-if="staticsData.remark" class="" v-html="staticsData.remark"></p>\
               <div v-else class="nodata">尚无信息</div>\
             </div>\
+            <div class="light-box-info"></div>\
         </div>'
 })

@@ -21,7 +21,7 @@
   <style>
     #app {
       overflow-x: hidden;
-      overflow-y: scroll;
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       width: 100vw;
     }
