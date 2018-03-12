@@ -1,0 +1,22 @@
+﻿.searchbar {position: relative;border: 1px solid #ededed;margin: 10px 20px;line-height: 40px;background-color: #f6f6f6;border-radius: 5px;}
+.searchbar .cp_pai {position: absolute;left: 0;top: 0;width: 80px;text-align: center;}
+.searchbar .cp_pai:active {background-color: #eee;}
+.searchbar .cp_pai i {color: #bbb;font-size: 12px;padding-left: 4px;font-style: normal;}
+.searchbar .cp_nob {margin: 0 70px 0 80px;}
+.searchbar .cp_nob label {display: block;padding: 10px 0;}
+.searchbar .cp_nob input {display: block;width: 100%;height: 20px;padding: 0 10px;border: none;border-left: 1px solid #d1d1d1;border-radius: 0;background: none;outline: none;}
+/*无按钮样式*/
+.searchbar .cp_nob_nobtn {margin: 0 0 0 80px;}
+.searchbar .cp_nob_nobtn label {padding: 10px 0;display: block;}
+.searchbar .cp_nob_nobtn label input {display: block;width: 100%;height: 20px;padding: 0 10px;border: none;border-left: 1px solid #d1d1d1;border-radius: 0;background: none;outline: none;}
+.searchbar .cp_btn {position: absolute;right: -1px;top: -1px;width: 70px;text-align:  center;height: 42px;line-height: 42px;}
+.searchbar .cp_btn a {background-color: #389ffe;color: #fff;display: block;border-radius: 0 5px 5px 0;}
+.searchbar .cp_btn a.gray {background-color: #ccc;}
+.searchbar .cp_btn .btn_search {height: 42px;/*background-image: url(../img/icon_search.png);*/background-repeat: no-repeat;background-position: center;background-size: 40px;}
+.searchbar .cp_btn span {background-color: #aaa;color: #fff;display: block;border-radius: 0 5px 5px 0;}
+.searchbar .cp_btn a:active {background-color: #4582e5;}
+.searchbar .scan_btn { display: inline-block; width: 40px; height: 40px; margin-left: 20px; }
+.searchbar .scan_btn a { display: inline-table; width: 100%; height: 100%; background: url(../img/scan_btn.jpg) no-repeat; background-size: contain; }
+
+
+.weui_uploader_file img {display: block;width: 100%;height: 100%;}
