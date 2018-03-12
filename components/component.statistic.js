@@ -45,6 +45,7 @@ var statistic = Vue.component('statistic', {
         state: 0,
         info:'依据依据依据依据依据'
       },
+      showInfo: false,
       mallid: 2,
       market: '壹方',
       markets: ['新天地|1', '壹方|2'],
@@ -643,6 +644,9 @@ var statistic = Vue.component('statistic', {
         }
       })
     },
+    toggleInfo: function () {
+      this.showInfo = !this.showInfo
+    },
     transferweekday: function (n) {
       var txt = ''
       switch (n) {
@@ -729,7 +733,7 @@ var statistic = Vue.component('statistic', {
                     <div class="cur-day">\
                       <p class="pragrah">\
                         <span class="ph">总营业额:</span>\
-                        <i class="light base"></i>\
+                        <i class="light base" @click="toggleInfo"></i>\
                         <span class="pb">{{comdify(Math.round(staticsData.day_sales))}}</span>\
                       </p>\
                       <p class="pragrah">\
@@ -854,6 +858,20 @@ var statistic = Vue.component('statistic', {
               <p  v-if="staticsData.remark" class="" v-html="staticsData.remark"></p>\
               <div v-else class="nodata">尚无信息</div>\
             </div>\
-            <div class="light-box-info"></div>\
+          <transition name="fade">\
+            <div class="light-box-info" v-show="showInfo"  @click="toggleInfo">\
+              <div class="flex">\
+                <div class="wrapper">\
+                  <div class="shopname">{{market}}</div>\
+                  <div class="subtit">营业额基准范围：</div>\
+                  <div class="year">{{currentDateVal.substring(0,4)}}年</div>\
+                  <div class="range">工作日：{{comdify(lightBoxInfo.workdayRange[0]/10000)}} - {{comdify(lightBoxInfo.workdayRange[1]/10000)}}万</div>\
+                  <div class="range">节假日：{{comdify(lightBoxInfo.weekendRange[0]/10000)}} - {{comdify(lightBoxInfo.weekendRange[1]/10000)}}万</div>\
+                  <div class="info">基准值取数依据{{lightBoxInfo.info}}工作日与节假日比例关系，将{{currentDateVal.substring(0,4)}}年销售KPI拆分到\
+                  工作日/节假日，基准范围为基准值+/-0.5个标准差。</div>\
+                </div>\
+              </div>\
+            </div>\
+          </transition>\
         </div>'
 })

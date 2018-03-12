@@ -64,7 +64,41 @@ body {
   left:0;
   z-index:1999;
   background:rgba(0,0,0,.7);
-  display: none;
+}
+.light-box-info .flex{
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  width:100%;
+  height:100%;
+}
+.light-box-info .wrapper{
+  background: #fff;
+  border-radius: 4px;
+  width:80vw;
+  padding:.8rem;
+}
+.light-box-info .wrapper .shopname{
+  font-size: .8rem;
+  color:#f28227;
+}
+.light-box-info .wrapper .subtit{
+  font-size: .7rem;
+  margin-top: .5rem;
+}
+.light-box-info .wrapper .year{
+  font-size: .6rem;
+  margin-top: .5rem;
+}
+.light-box-info .wrapper .range{
+  font-size: .6rem;
+  color:#333;
+  margin-top: .5rem;
+}
+.light-box-info .wrapper .info{
+  font-size:.5rem;
+  color:#888;
+  margin-top: 1rem;
+  line-height:1.4;
 }
 
 .subtit {
@@ -173,9 +207,6 @@ body {
   padding: 0 5px;
   margin-right:5px;
   position: relative;
-}
-.pickdate{
-  
 }
 .rank-mode:after,
 .pickdate:after{
@@ -391,8 +422,6 @@ height:1.5rem;
 .red{
   color:#f28227;
 }
-.mytable1 td div{
-}
 .wd{
   margin-top:.2rem;
 }
@@ -430,4 +459,10 @@ height:1.5rem;
   font-size:.5rem;
   color:#ff8227;
   padding:.2rem;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
