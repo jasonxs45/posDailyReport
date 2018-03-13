@@ -1,5 +1,75 @@
 ﻿/* thefxxktd */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input {
+    border: 0;
+    font-size: 100%;
+    font-weight: normal;
+    vertical-align: baseline;
+}
 
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section {
+    display: block;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* custom */
+a {
+    color: #7e8c8d;
+    text-decoration: none;
+    -webkit-backface-visibility: hidden;
+}
+
+li {
+    list-style: none;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    height: 5px;
+    background-color: rgba(125, 125, 125, 0.7);
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    width: 5px;
+    background-color: rgba(125, 125, 125, 0.7);
+    -webkit-border-radius: 6px;
+}
 body {
   background: #fff;
 }
@@ -322,7 +392,7 @@ body {
 }
 
 .mytable {
-  width: 680px
+  width: 550px
 }
 
 .mytable1 {
@@ -349,11 +419,21 @@ body {
   vertical-align: initial;
   margin-top: .2rem;
 }
-
-.mytable th div {
-  height: 1.5rem;
+.mytable th div.th{
+  height:2rem;
+  padding:0;
 }
-
+.mytable th div.th .wrap{
+  display: -webkit-box;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  width:100%;
+  height: 100%;
+}
+.mytable th div.th .wrap .carets{
+  height: 100%;
+  position: relative;
+}
 .mytable th:first-child, .mytable td:first-child {
   color: transparent;
   border-right: none;
@@ -381,6 +461,11 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.table-wrapper .mytable th:first-child .wrap span{
+  text-align: left;
+  display: block;
+  width:100%;
 }
 
 .table-wrapper .mytable tbody th:first-child div, .table-wrapper .mytable tbody td:first-child div {
@@ -426,8 +511,8 @@ body {
   background: #f5f5f5;
   color: #888;
   padding: 0 .3rem;
-  line-height: calc(1.5rem + 1px);
-  height: calc(1.5rem + 1px);
+  line-height: calc(2rem + 1px);
+  height: calc(2rem + 1px);
   font-weight: 600;
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
@@ -473,6 +558,8 @@ body {
 
 .sortcolumn span {
   font-size: .5rem;
+  display: block;
+  text-align: right;
 }
 
 .sortcolumn .el-icon-caret-top, .sortcolumn .el-icon-caret-bottom {
@@ -481,21 +568,20 @@ body {
 }
 
 .sortcolumn .el-icon-caret-bottom {
-  position: relative;
-  top: .1rem;
+  position: absolute;
+  bottom:.1rem;
 }
 
 .sortcolumn .el-icon-caret-top {
   position: absolute;
-  top: 50%;
-  margin-top: -.4rem;
+  top:.1rem;
 }
 
-.sortcolumn.up .el-icon-caret-top {
+.sortcolumn.up.active .el-icon-caret-top {
   color: #409EFF;
 }
 
-.sortcolumn.down .el-icon-caret-bottom {
+.sortcolumn.down.active .el-icon-caret-bottom {
   color: #409EFF;
 }
 

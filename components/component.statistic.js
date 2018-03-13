@@ -488,10 +488,6 @@ var statistic = Vue.component('statistic', {
               arr[0] = point[0] - dom.clientWidth;
             }
             return arr;
-            // var obj = {top: '20%'};
-            // obj[['left', 'right'][+(point[0] < size.viewSize[0] / 2)]] = 5;
-            // console.log(dom)
-            // return obj;
           }
         },
         legend: {
@@ -542,7 +538,7 @@ var statistic = Vue.component('statistic', {
         },
         {
           type: 'value',
-          name: '客流(万次)/车流(万次)',
+          name: '客流(万次)/\n车流(万次)',
           splitLine: {
             show: false
           },

@@ -43,8 +43,8 @@ var marketquery = Vue.component('marketquery', {
           return time.getTime() > yesterday.getTime() || time.getTime()< minDate.getTime();
         }
       },
-      mallid:'',
-      market:'',
+      mallid:2,
+      market:'壹方',
       markets:['新天地|1','壹方|2'],
       floors: [],
       states: [],
@@ -60,31 +60,29 @@ var marketquery = Vue.component('marketquery', {
       tableData:  null,
       fixThead:false,
       fixColumn:false,
-      sortup:false
+      sortup:false,
+      sortProps: 'GrossSales'
     }
   },
   computed: {
     calcTableDate: function () {
       var _self = this;
       if(this.tableData){
-        this.tableData.forEach(function (item) {
-          // if (item.CustomerOrders == 0) {
-          //   item.CustomerPrice = 0.00;
-          // } else {
-          //   item.CustomerPrice = (item.GrossSales / item.CustomerOrders).toFixed(2);
-          // }
+        var arr = []
+        for (var i =0;i<this.tableData.length;i++) {
+          var obj = {}
+          for (var j in this.tableData[i]) {
+            obj[j] = this.tableData[i][j]
+          }
+          arr.push(obj)
+        }
+        arr.forEach(function (item) {
           if ((item.CustomerOrders == 0 && item.OperationCategory!= "餐饮") || (item.CustomerNum == 0 && item.OperationCategory== "餐饮")) {
             item.CustomerPrice = 0.00;
           } else {
-           
            item.CustomerPrice =  item.OperationCategory!= "餐饮" ?(item.GrossSales/item.CustomerOrders):(item.GrossSales/item.CustomerNum);
           }
           item.CustomerPrice = formatNumber(item.CustomerPrice,0,1);
-          if (item.SalesTarget == 0) {
-            item.SalesRate = '0.0%';
-          } else {
-            item.SalesRate = (100 * item.MonthGrossSales / item.SalesTarget).toFixed(1) + '%';
-          }
           item.CustomerNum = formatNumber(item.CustomerNum, 0, 1);
           item.GrossSales = _self.comdify(item.GrossSales);
           item.CustomerOrders =formatNumber(item.CustomerOrders, 0, 1);
@@ -93,7 +91,7 @@ var marketquery = Vue.component('marketquery', {
           item.SalesTarget = _self.comdify(item.SalesTarget);
         });
       }
-      return this.tableData;
+      return arr;
     }
   },
   filters:{
@@ -130,38 +128,38 @@ var marketquery = Vue.component('marketquery', {
       this.market = this.form.mallid == 1?'新天地':this.form.mallid == 2?'壹方':'';
       this.form.floor = this.$route.params.Floor;
       this.form.shopname = this.$route.params.Shopname;      
-      // this.form.shop = {
-      //   ShopName: this.$route.params.Shopname,
-      //   ShopID: ''
-      // };
       this.form.operationcategory = this.$route.params.operationcategory;
-      console.log(this.form)
       this.initWithQuery();
     } else {
       // this.initRelatedQuery();
     }
   },
-  created: function () {},
+  created: function () {
+    this.mallid = this.form.mallid = 2;
+    this.market = this.form.mallid == 1?'新天地':this.form.mallid == 2?'壹方':'';
+    this.initWithQuery();
+  },
   mounted:function(){
   },
   methods: {
     comdify: comdify,
     initRelatedQuery: function (val) {
       this.mallid = this.form.mallid = val.split('|')[1];
-      this.getFloors();
-      this.getStates();
-      this.getShops();
       this.form.floor = '';
       this.form.operationcategory = '';
       this.form.shopname = '';
-      // this.form.date = date;
-      this.tableData = null;
-    },
-    initWithQuery: function () {
-      this.onSubmit();
       this.getFloors();
       this.getStates();
       this.getShops();
+      this.onSubmit();
+      // this.form.date = date;
+      // this.tableData = null;
+    },
+    initWithQuery: function () { 
+      this.getFloors();
+      this.getStates();
+      this.getShops();
+      this.onSubmit();
     },
     getFloors: function () {
       var _self = this;
@@ -186,7 +184,6 @@ var marketquery = Vue.component('marketquery', {
             ,content: '加载中'
             ,shadeClose:false
           });
-          console.log(layerindex)
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
           layer.close(layerindex)
@@ -226,7 +223,6 @@ var marketquery = Vue.component('marketquery', {
             ,content: '加载中'
             ,shadeClose:false
           });
-          console.log(layerindex)
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
           layer.close(layerindex)
@@ -265,7 +261,6 @@ var marketquery = Vue.component('marketquery', {
             ,content: '加载中'
             ,shadeClose:false
           });
-          console.log(layerindex)
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
           layer.close(layerindex)
@@ -317,7 +312,6 @@ var marketquery = Vue.component('marketquery', {
             ,content: '加载中'
             ,shadeClose:false
           });
-          console.log(layerindex)
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
           layer.close(layerindex)
@@ -327,15 +321,21 @@ var marketquery = Vue.component('marketquery', {
         },
         success: function (res) {
           layer.close(layerindex);
+          _self.tableData = []
           _self.tableData = res.Data;
+          for (var i =0;i<_self.tableData.length;i++) {
+            if (_self.tableData[i].SalesTarget == 0) {
+              _self.tableData[i].SalesRate = '0.0%';
+            } else {
+              _self.tableData[i].SalesRate = (100 * _self.tableData[i].MonthGrossSales / _self.tableData[i].SalesTarget).toFixed(1) + '%';
+            }
+          }
           // 监听滚动
           if(_self.tableData.length>0){
             _self.listenScroll();
           }
-          // _self.tableData = []
         }
       });
-      console.log('submit!');
     },
     rowClick: function (event) {
       var _self = this;
@@ -384,9 +384,24 @@ var marketquery = Vue.component('marketquery', {
         }
       })
     },
-    sortcount:function(){
-      this.tableData.reverse();
-      this.sortup = !this.sortup;
+    sortcount:function(e){
+      var _self = this
+      var getNumber = function (str) {
+        str += ''
+        return Number(str.replace('%',''))
+      }
+      this.sortProps = e.currentTarget.dataset.prop
+      if (this.sortup) {
+        this.tableData.sort(function(a,b){
+          return getNumber(b[_self.sortProps]) - getNumber(a[_self.sortProps])
+        })
+        this.sortup = false
+      } else {
+        this.tableData.sort(function(a,b){
+          return getNumber(a[_self.sortProps]) - getNumber(b[_self.sortProps])
+        })
+        this.sortup = true
+      }
     }
   },
   template: '<div class="marketquery">\
@@ -402,7 +417,7 @@ var marketquery = Vue.component('marketquery', {
                 </el-col>\
                 <el-col :span="12">\
                   <el-form-item label="楼层/位置">\
-                    <el-select size="mini" v-model="form.floor" placeholder="请选择" style="width: 100%;" @change="getShops">\
+                    <el-select size="mini" v-model="form.floor" placeholder="请选择" style="width: 100%;" @change="getShops();onSubmit();">\
                       <el-option v-for="(item,index) in floors" :label="item.Location" :value="item.Location" key="floor-{{index}}"></el-option>\
                     </el-select>\
                   </el-form-item>\
@@ -411,14 +426,14 @@ var marketquery = Vue.component('marketquery', {
               <el-row :gutter="0">\
                 <el-col :span="12">\
                   <el-form-item label="租户业态">\
-                    <el-select  size="mini" v-model="form.operationcategory" placeholder="请选择" style="width: 100%;" @change="getShops">\
+                    <el-select  size="mini" v-model="form.operationcategory" placeholder="请选择" style="width: 100%;" @change="getShops();onSubmit();">\
                       <el-option v-for="(item,index) in states" :label="item.OperationCategory" :value="item.OperationCategory" key="floor-{{index}}"></el-option>\
                     </el-select>\
                   </el-form-item>\
                 </el-col>\
                 <el-col :span="12">\
                   <el-form-item label="租户名称">\
-                    <el-select  size="mini" v-model="form.shopname" filterable placeholder="请选择" style="width: 100%;">\
+                    <el-select  size="mini" v-model="form.shopname" filterable placeholder="请选择" style="width: 100%;" @change="onSubmit">\
                       <el-option v-for="(item,index) in shopNames" :value="item" :key="item.ShopID"></el-option>\
                     </el-select>\
                   </el-form-item>\
@@ -427,12 +442,7 @@ var marketquery = Vue.component('marketquery', {
               <el-row :gutter="0">\
                   <el-col :span="12">\
                     <el-form-item  label="时间">\
-                      <el-date-picker size="mini" type="date" :picker-options="pickerOptions" format="yyyy/MM/dd" value-format="yyyy/MM/dd" placeholder="选择日期" v-model="form.date" style="width: 100%;" :editable=false></el-date-picker>\
-                    </el-form-item>\
-                  </el-col>\
-                  <el-col :span="12">\
-                    <el-form-item>\
-                      <el-button style="margin-left:0 !important;line-height:20px !important;float:right;width:100%;" size="medium" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>\
+                      <el-date-picker @change="onSubmit" size="mini" type="date" :picker-options="pickerOptions" format="yyyy/MM/dd" value-format="yyyy/MM/dd" placeholder="选择日期" v-model="form.date" style="width: 100%;" :editable=false></el-date-picker>\
                     </el-form-item>\
                   </el-col>\
                 </el-row>\
@@ -448,20 +458,48 @@ var marketquery = Vue.component('marketquery', {
                         <col width="70px" />\
                         <col width="70px" />\
                         <col width="70px" />\
-                        <col width="100px" />\
-                        <col width="100px" />\
-                        <col width="100px" />\
+                        <col width="50px" />\
+                        <col width="50px" />\
+                        <col width="70px" />\
                       </colgroup>\
                       <thead class="thead">\
                         <tr>\
-                          <th><div class="th">店铺名称</div></th>\
-                          <th @click="sortcount"><div class="th sortcolumn" :class="sortup?\'up\':\'down\'"><span>营业额</span><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></div></th>\
-                          <th><div class="th">进店人数</div></th>\
-                          <th><div class="th">客数</div></th>\
-                          <th><div class="th">客单价</div></th>\
-                          <th><div class="th">月累计销售</div></th>\
-                          <th><div class="th">月销售预算</div></th>\
-                          <th><div class="th">月预算完成率</div></th>\
+                          <th><div class="th"><div class="wrap"><span>店铺名称</span></div></div></th>\
+                          <th @click="sortcount" data-prop="GrossSales">\
+                            <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'GrossSales\'?\'active\':\'\']">\
+                              <div class="wrap">\
+                                <span>营业额</span>\
+                                <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                              </div>\
+                            </div>\
+                          </th>\
+                          <th @click="sortcount" data-prop="MonthGrossSales">\
+                            <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'MonthGrossSales\'?\'active\':\'\']">\
+                              <div class="wrap">\
+                                <span>月累计<br/>营业额</span>\
+                                <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                              </div>\
+                            </div>\
+                          </th>\
+                          <th @click="sortcount" data-prop="SalesTarget">\
+                            <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'SalesTarget\'?\'active\':\'\']">\
+                              <div class="wrap">\
+                                <span>月销售<br/>预算</span>\
+                                <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                              </div>\
+                            </div>\
+                          </th>\
+                          <th @click="sortcount" data-prop="SalesRate">\
+                            <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'SalesRate\'?\'active\':\'\']">\
+                              <div class="wrap">\
+                                <span>月预算<br/>完成率</span>\
+                                <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                              </div>\
+                            </div>\
+                          </th>\
+                          <th><div class="th"><div class="wrap"><span>进店<br/>人数</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span>客数</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span>客单价</span></div></div></th>\
                         </tr>\
                       </thead>\
                     </table>\
@@ -475,32 +513,60 @@ var marketquery = Vue.component('marketquery', {
                       <col width="70px" />\
                       <col width="70px" />\
                       <col width="70px" />\
-                      <col width="100px" />\
-                      <col width="100px" />\
-                      <col width="100px" />\
+                      <col width="50px" />\
+                      <col width="50px" />\
+                      <col width="70px" />\
                     </colgroup>\
                     <thead class="thead" ref="thead">\
                       <tr>\
-                        <th><div class="th">店铺名称</div></th>\
-                        <th  @click="sortcount"><div class="th sortcolumn" :class="sortup?\'up\':\'down\'"><span>营业额</span><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></div></th>\
-                        <th><div class="th">进店人数</div></th>\
-                        <th><div class="th">客数</div></th>\
-                        <th><div class="th">客单价</div></th>\
-                        <th><div class="th">月累计销售</div></th>\
-                        <th><div class="th">月销售预算</div></th>\
-                        <th><div class="th">月预算完成率</div></th>\
+                        <th><div class="th"><div class="wrap"><span>店铺名称</span></div></div></th>\
+                        <th @click="sortcount" data-prop="GrossSales">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'GrossSales\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>营业额</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th @click="sortcount" data-prop="MonthGrossSales">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'MonthGrossSales\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>月累计<br/>营业额</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th @click="sortcount" data-prop="SalesTarget">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'SalesTarget\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>月销售<br/>预算</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th @click="sortcount" data-prop="SalesRate">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'SalesRate\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>月预算<br/>完成率</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th><div class="th"><div class="wrap"><span>进店<br/>人数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span>客数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span>客单价</span></div></div></th>\
                       </tr>\
                     </thead>\
                     <tbody>\
                       <tr v-for="(item,index) in calcTableDate">\
                         <td><div>{{item.ShopName}}</div></td>\
                         <td><div>{{item.GrossSales}}</div></td>\
-                        <td><div>{{item.CustomerNum}}</div></td>\
-                        <td><div>{{item.CustomerOrders}}</div></td>\
-                        <td><div>{{item.CustomerPrice}}</div></td>\
                         <td><div>{{item.MonthGrossSales}}</div></td>\
                         <td><div>{{item.SalesTarget}}</div></td>\
                         <td><div>{{item.SalesRate}}</div></td>\
+                        <td><div>{{item.CustomerNum}}</div></td>\
+                        <td><div>{{item.CustomerOrders}}</div></td>\
+                        <td><div>{{item.CustomerPrice}}</div></td>\
                       </tr>\
                      </tbody>\
                   </table>\
@@ -513,32 +579,60 @@ var marketquery = Vue.component('marketquery', {
                       <col width="70px" />\
                       <col width="70px" />\
                       <col width="70px" />\
-                      <col width="100px" />\
-                      <col width="100px" />\
-                      <col width="100px" />\
+                      <col width="50px" />\
+                      <col width="50px" />\
+                      <col width="70px" />\
                     </colgroup>\
                     <thead class="thead">\
                       <tr>\
-                        <th><div class="th">店铺名称</div></th>\
-                        <th @click="sortcount"><div class="th sortcolumn" :class="sortup?\'up\':\'down\'"><span>营业额</span><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></div></th>\
-                        <th><div class="th">进店人数</div></th>\
-                        <th><div class="th">客数</div></th>\
-                        <th><div class="th">客单价</div></th>\
-                        <th><div class="th">月累计销售</div></th>\
-                        <th><div class="th">月销售预算</div></th>\
-                        <th><div class="th">月预算完成率</div></th>\
+                        <th><div class="th"><div class="wrap"><span>店铺名称</span></div></div></th>\
+                        <th @click="sortcount" data-prop="GrossSales">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'GrossSales\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>营业额</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th @click="sortcount" data-prop="MonthGrossSales">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'MonthGrossSales\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>月累计<br/>营业额</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th @click="sortcount" data-prop="SalesTarget">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'SalesTarget\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>月销售<br/>预算</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th @click="sortcount" data-prop="SalesRate">\
+                          <div class="th sortcolumn" :class="[sortup?\'up\':\'down\',sortProps == \'SalesRate\'?\'active\':\'\']">\
+                            <div class="wrap">\
+                              <span>月预算<br/>完成率</span>\
+                              <span class="carets"><i class="el-icon-caret-top"></i><i class="el-icon-caret-bottom"></i></span>\
+                            </div>\
+                          </div>\
+                        </th>\
+                        <th><div class="th"><div class="wrap"><span>进店<br/>人数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span>客数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span>客单价</span></div></div></th>\
                       </tr>\
                     </thead>\
                     <tbody>\
                       <tr v-for="(item,index) in calcTableDate">\
-                        <td @click="rowClick" :data-ShopName="item.ShopName" :data-ShopID="item.ShopID"><div>{{item.ShopName}}</div></td>\
+                        <td><div>{{item.ShopName}}</div></td>\
                         <td><div>{{item.GrossSales}}</div></td>\
-                        <td><div>{{item.CustomerNum}}</div></td>\
-                        <td><div>{{item.CustomerOrders}}</div></td>\
-                        <td><div>{{item.CustomerPrice}}</div></td>\
                         <td><div>{{item.MonthGrossSales}}</div></td>\
                         <td><div>{{item.SalesTarget}}</div></td>\
                         <td><div>{{item.SalesRate}}</div></td>\
+                        <td><div>{{item.CustomerNum}}</div></td>\
+                        <td><div>{{item.CustomerOrders}}</div></td>\
+                        <td><div>{{item.CustomerPrice}}</div></td>\
                       </tr>\
                      </tbody>\
                   </table>\
