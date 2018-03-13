@@ -2,48 +2,48 @@ var today = new Date();
 var yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
 var cwdata = {};
 var lwdata = {};
-function formatNumber(num,cent,isThousand) {
-  num = num.toString().replace(/\$|\,/g,''); 
+function formatNumber(num, cent, isThousand) {
+  num = num.toString().replace(/\$|\,/g, '');
 
   // 检查传入数值为数值类型
-    if(isNaN(num))  
-      num = "0";  
+  if (isNaN(num))
+    num = "0";
 
   // 获取符号(正/负数)
-  sign = (num == (num = Math.abs(num)));  
+  sign = (num == (num = Math.abs(num)));
 
-  num = Math.floor(num*Math.pow(10,cent)+0.50000000001);  // 把指定的小数位先转换成整数.多余的小数位四舍五入
-  cents = num%Math.pow(10,cent);              // 求出小数位数值
-  num = Math.floor(num/Math.pow(10,cent)).toString();   // 求出整数位数值
+  num = Math.floor(num * Math.pow(10, cent) + 0.50000000001);  // 把指定的小数位先转换成整数.多余的小数位四舍五入
+  cents = num % Math.pow(10, cent);              // 求出小数位数值
+  num = Math.floor(num / Math.pow(10, cent)).toString();   // 求出整数位数值
   cents = cents.toString();               // 把小数位转换成字符串,以便求小数位长度
 
   // 补足小数位到指定的位数
-  while(cents.length<cent)  
-    cents = "0" + cents;  
+  while (cents.length < cent)
+    cents = "0" + cents;
 
-  if(isThousand) {  
+  if (isThousand) {
     // 对整数部分进行千分位格式化.
-    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
-      num = num.substring(0,num.length-(4*i+3))+','+ num.substring(num.length-(4*i+3));  
-  }  
+    for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+      num = num.substring(0, num.length - (4 * i + 3)) + ',' + num.substring(num.length - (4 * i + 3));
+  }
 
   // if (cent > 0)  
   //   return (((sign)?'':'-') + num + '.' + cents);  
   // else  
-    return (((sign)?'':'-') + num);  
-}  
-var comdify = function(num){
-  return formatNumber(num,0,1);
+  return (((sign) ? '' : '-') + num);
+}
+var comdify = function (num) {
+  return formatNumber(num, 0, 1);
 }
 var statistic = Vue.component('statistic', {
   name: 'statistic',
   data: function () {
     return {
-      lightBoxInfo:{
-        workdayRange:[1231231313,1531231313],
-        weekendRange:[1231231313,1531231313],
+      lightBoxInfo: {
+        workdayRange: [1231231313, 1531231313],
+        weekendRange: [1231231313, 1531231313],
         state: 0,
-        info:'依据依据依据依据依据'
+        info: '依据依据依据依据依据'
       },
       showInfo: false,
       mallid: 2,
@@ -104,6 +104,7 @@ var statistic = Vue.component('statistic', {
     this.market = this.mallid == 1 ? '新天地' : this.mallid == 2 ? '壹方' : '';
     this.currentDateVal = getQueryStringByName("day") || this.currentDateVal;
     this.top = getQueryStringByName("top") || this.top;
+    this.getLightInfo();
     this.getList();
     this.getShopByTop();
     this.getStaticsTop();
@@ -172,6 +173,43 @@ var statistic = Vue.component('statistic', {
     selectRank: function (event) {
       this.top = event.target.value;
       this.getShopByTop();
+    },
+    getLightInfo: function () {
+      var _self = this;
+      var layerindex = null;
+      $.ajax({
+        url: "webserver/ShopPosService.aspx",
+        type: "post",
+        dataType: 'json',
+        cache: false,
+        async: false,
+        data: {
+          "v": "getstaticstop",
+          "openid": window.sessionStorage.Global_openid,
+          "day": _self.year,
+          "MallID": _self.mallid,
+          "r": Math.random() * 10000
+        },
+        beforeSend: function () {
+          layerindex = layer.open({
+            type: 2,
+            content: '加载中',
+            shadeClose: false
+          });
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          layer.close(layerindex)
+        },
+        fail: function () {
+          layer.close(layerindex)
+        },
+        success: function (res) {
+          layer.close(layerindex)
+          if (res.ErrorCode == 0) {
+            _self.staticsData = res.Data;
+          }
+        }
+      });
     },
     getList: function () {
       var _self = this;
@@ -285,7 +323,6 @@ var statistic = Vue.component('statistic', {
           layer.close(layerindex)
           if (res.ErrorCode == 0) {
             _self.staticsData = res.Data;
-            console.log(_self.staticsData)
             // _self.staticsData = res.ErrorMsg.split('|');
             // for (var i = 0; i < _self.staticsData.length; i++) {
             //   if (i == 3 || i == 4) {
@@ -447,7 +484,7 @@ var statistic = Vue.component('statistic', {
           position: function (point, params, dom, rect, size) {
             // 固定在顶部
             var arr = [point[0], '10%']
-            if(point[0]+dom.clientWidth>size.viewSize[0]){
+            if (point[0] + dom.clientWidth > size.viewSize[0]) {
               arr[0] = point[0] - dom.clientWidth;
             }
             return arr;
@@ -492,120 +529,120 @@ var statistic = Vue.component('statistic', {
           data: xlabels
         },
         yAxis: [{
-            name: '营业额(百万)',
-            type: 'value',
-            axisLabel: {
-              formatter: function (value, index) {
-                return value / 1000000;
-              },
-              textStyle: {
-                fontSize: 8
-              }
-            }
-          },
-          {
-            type: 'value',
-            name: '客流(万次)/车流(万次)',
-            splitLine: {
-              show: false
-            },
-            axisLabel: {
-              formatter: function (value, index) {
-                return (value / 10000).toFixed(1)
-              }
+          name: '营业额(百万)',
+          type: 'value',
+          axisLabel: {
+            formatter: function (value, index) {
+              return value / 1000000;
             },
             textStyle: {
               fontSize: 8
             }
           }
+        },
+        {
+          type: 'value',
+          name: '客流(万次)/车流(万次)',
+          splitLine: {
+            show: false
+          },
+          axisLabel: {
+            formatter: function (value, index) {
+              return (value / 10000).toFixed(1)
+            }
+          },
+          textStyle: {
+            fontSize: 8
+          }
+        }
         ],
         series: [{
-            name: '本周营业额',
-            type: 'line',
-            data: cwdata.grosssales,
-            // markLine: {
-            //   data: [{
-            //     type: 'average',
-            //     name: '平均值'
-            //   }]
-            // }
-          },
-          {
-            name: '上周营业额',
-            type: 'line',
-            data: lwdata.grosssales,
-            // markLine: {
-            //   data: [
-            //     {
-            //       type: 'average',
-            //       name: '平均值'
-            //     },
-            //     [{
-            //       symbol: 'none',
-            //       x: '90%',
-            //       yAxis: 'max'
-            //     }, {
-            //       symbol: 'circle',
-            //       label: {
-            //         normal: {
-            //           position: 'start',
-            //           formatter: '最大值'
-            //         }
-            //       },
-            //       type: 'max',
-            //       name: '最高点'
-            //     }]
-            //   ]
-            // }
-          },
-          {
-            name: '本周车流',
-            type: 'bar',
-            stack: '本周',
-            yAxisIndex: 1,
-            data: cwdata.cnum,
-            itemStyle:{
-              normal:{
-                color:'#c03736'
-              }
-            }
-          },
-          {
-            name: '本周客流',
-            type: 'bar',
-            stack: '本周',
-            yAxisIndex: 1,
-            data: cwdata.knum,
-            itemStyle:{
-              normal:{
-                color:'#e78f72'
-              }
-            }
-          },
-          {
-            name: '上周车流',
-            type: 'bar',
-            stack: '上周',
-            yAxisIndex: 1,
-            data: lwdata.cnum,
-            itemStyle:{
-              normal:{
-                color:'#0d6797'
-              }
-            }
-          },
-          {
-            name: '上周客流',
-            type: 'bar',
-            stack: '上周',
-            yAxisIndex: 1,
-            data: lwdata.knum,
-            itemStyle:{
-              normal:{
-                color:'#51abcc'
-              }
+          name: '本周营业额',
+          type: 'line',
+          data: cwdata.grosssales,
+          // markLine: {
+          //   data: [{
+          //     type: 'average',
+          //     name: '平均值'
+          //   }]
+          // }
+        },
+        {
+          name: '上周营业额',
+          type: 'line',
+          data: lwdata.grosssales,
+          // markLine: {
+          //   data: [
+          //     {
+          //       type: 'average',
+          //       name: '平均值'
+          //     },
+          //     [{
+          //       symbol: 'none',
+          //       x: '90%',
+          //       yAxis: 'max'
+          //     }, {
+          //       symbol: 'circle',
+          //       label: {
+          //         normal: {
+          //           position: 'start',
+          //           formatter: '最大值'
+          //         }
+          //       },
+          //       type: 'max',
+          //       name: '最高点'
+          //     }]
+          //   ]
+          // }
+        },
+        {
+          name: '本周车流',
+          type: 'bar',
+          stack: '本周',
+          yAxisIndex: 1,
+          data: cwdata.cnum,
+          itemStyle: {
+            normal: {
+              color: '#c03736'
             }
           }
+        },
+        {
+          name: '本周客流',
+          type: 'bar',
+          stack: '本周',
+          yAxisIndex: 1,
+          data: cwdata.knum,
+          itemStyle: {
+            normal: {
+              color: '#e78f72'
+            }
+          }
+        },
+        {
+          name: '上周车流',
+          type: 'bar',
+          stack: '上周',
+          yAxisIndex: 1,
+          data: lwdata.cnum,
+          itemStyle: {
+            normal: {
+              color: '#0d6797'
+            }
+          }
+        },
+        {
+          name: '上周客流',
+          type: 'bar',
+          stack: '上周',
+          yAxisIndex: 1,
+          data: lwdata.knum,
+          itemStyle: {
+            normal: {
+              color: '#51abcc'
+            }
+          }
+        }
         ]
       };
       // 使用刚指定的配置项和数据显示图表。
@@ -676,7 +713,7 @@ var statistic = Vue.component('statistic', {
     }
   },
   filters: {
-    comdify:comdify,
+    comdify: comdify,
     seperateName: function (str) {
       return str.split('|')[0]
     },
@@ -733,7 +770,8 @@ var statistic = Vue.component('statistic', {
                     <div class="cur-day">\
                       <p class="pragrah">\
                         <span class="ph">总营业额:</span>\
-                        <i class="light base" @click="toggleInfo"></i>\
+                        <i class="light" @click="toggleInfo"\
+                        :class="lightBoxInfo.state == 0?\'red\':lightBoxInfo.state == 1?\'base\':\'red\'"></i>\
                         <span class="pb">{{comdify(Math.round(staticsData.day_sales))}}</span>\
                       </p>\
                       <p class="pragrah">\
@@ -858,16 +896,16 @@ var statistic = Vue.component('statistic', {
               <p  v-if="staticsData.remark" class="" v-html="staticsData.remark"></p>\
               <div v-else class="nodata">尚无信息</div>\
             </div>\
-          <transition name="fade">\
+          <transition name="zoom">\
             <div class="light-box-info" v-show="showInfo"  @click="toggleInfo">\
               <div class="flex">\
                 <div class="wrapper">\
-                  <div class="shopname">{{market}}</div>\
+                  <div class="shopname">{{market.split(\'|\')[0]}}</div>\
                   <div class="subtit">营业额基准范围：</div>\
-                  <div class="year">{{currentDateVal.substring(0,4)}}年</div>\
+                  <div class="year">{{year}}年</div>\
                   <div class="range">工作日：{{comdify(lightBoxInfo.workdayRange[0]/10000)}} - {{comdify(lightBoxInfo.workdayRange[1]/10000)}}万</div>\
                   <div class="range">节假日：{{comdify(lightBoxInfo.weekendRange[0]/10000)}} - {{comdify(lightBoxInfo.weekendRange[1]/10000)}}万</div>\
-                  <div class="info">基准值取数依据{{lightBoxInfo.info}}工作日与节假日比例关系，将{{currentDateVal.substring(0,4)}}年销售KPI拆分到\
+                  <div class="info">基准值取数依据{{lightBoxInfo.info}}工作日与节假日比例关系，将{{year}}年销售KPI拆分到\
                   工作日/节假日，基准范围为基准值+/-0.5个标准差。</div>\
                 </div>\
               </div>\
