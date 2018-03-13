@@ -892,7 +892,6 @@ var statistic = Vue.component('statistic', {
               <p  v-if="staticsData.remark" class="" v-html="staticsData.remark"></p>\
               <div v-else class="nodata">尚无信息</div>\
             </div>\
-          <transition name="zoom">\
             <div class="light-box-info" v-show="showInfo"  @click="toggleInfo">\
               <div class="flex">\
                 <div class="wrapper">\
@@ -906,6 +905,5 @@ var statistic = Vue.component('statistic', {
                 </div>\
               </div>\
             </div>\
-          </transition>\
         </div>'
 })

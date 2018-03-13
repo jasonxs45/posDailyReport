@@ -157,11 +157,13 @@ body {
 .light-box-info .wrapper .shopname {
   font-size: .8rem;
   color: #f28227;
+  font-weight: 900
 }
 
 .light-box-info .wrapper .subtit {
   font-size: .7rem;
   margin-top: .5rem;
+  font-weight: 500;
 }
 
 .light-box-info .wrapper .year {
@@ -392,7 +394,7 @@ body {
 }
 
 .mytable {
-  width: 550px
+  width: 570px
 }
 
 .mytable1 {

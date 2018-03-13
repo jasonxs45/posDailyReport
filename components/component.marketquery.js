@@ -281,6 +281,8 @@ var marketquery = Vue.component('marketquery', {
     },
     onSubmit() {
       var _self = this;
+      this.sortProps = 'GrossSales';
+      this.sortup = false;
       if (this.form.mallid == '') {
         $.alert('请选择要查询的商场！');
         return
@@ -455,8 +457,8 @@ var marketquery = Vue.component('marketquery', {
                       <colgroup>\
                         <col width="100px" />\
                         <col width="70px" />\
-                        <col width="70px" />\
-                        <col width="70px" />\
+                        <col width="80px" />\
+                        <col width="80px" />\
                         <col width="70px" />\
                         <col width="50px" />\
                         <col width="50px" />\
@@ -510,8 +512,8 @@ var marketquery = Vue.component('marketquery', {
                     <colgroup>\
                       <col width="100px" />\
                       <col width="70px" />\
-                      <col width="70px" />\
-                      <col width="70px" />\
+                      <col width="80px" />\
+                      <col width="80px" />\
                       <col width="70px" />\
                       <col width="50px" />\
                       <col width="50px" />\
@@ -576,8 +578,8 @@ var marketquery = Vue.component('marketquery', {
                     <colgroup>\
                       <col width="100px" />\
                       <col width="70px" />\
-                      <col width="70px" />\
-                      <col width="70px" />\
+                      <col width="80px" />\
+                      <col width="80px" />\
                       <col width="70px" />\
                       <col width="50px" />\
                       <col width="50px" />\
