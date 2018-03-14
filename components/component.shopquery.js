@@ -284,6 +284,8 @@ var shopquery = Vue.component('shopquery', {
     getShops:function(){
       var _self = this;
       var layerindex = null;
+      this.form.shop = '';
+      this.tableData = null;
       $.ajax({
         url: "webserver/ShopPosService.aspx",
         type: "post",
@@ -322,10 +324,11 @@ var shopquery = Vue.component('shopquery', {
     },
     getShopId:function(val){
       var index = val.split('+')[1];
-      console.log(this.form)
+      this.onSubmit();
     },
     onSubmit() {
       var _self = this;
+      _self.tableData = null;
       var shopid = this.form.shop.split('|')[1];
       if (!this.form.mallid) {
         $.alert('请先选择要查询的商场！');
@@ -402,19 +405,14 @@ var shopquery = Vue.component('shopquery', {
       year = new Date(val).getFullYear();
       this.form.year = year+'';
       this.form.month = '';
-      // if(curYear<year){
-      //   console.log()
-      // }
-      // year = curYear;
-      // month = new Date(val).getMonth()+1;
-      // this.form.month = year+'-'+month;
+      this.onSubmit();
     },
     updateMonth:function(val){
-      console.log(new Date(val).getFullYear()+'-'+(new Date(val).getMonth()+1))
       year = new Date(val).getFullYear();
       this.form.year = year+'';
       month = new Date(val).getMonth()+1;
       this.form.month = year+'-'+month;
+      this.onSubmit();
     },
     initEcharts: function () {
       var _self = this;
@@ -537,7 +535,7 @@ var shopquery = Vue.component('shopquery', {
                 </el-col>\
               </el-row>\
               <el-row :gutter="0">\
-                <el-col :span="16">\
+                <el-col :span="24">\
                   <el-form-item label="日报年月">\
                     <el-row>\
                       <el-col :span="11">\
@@ -554,55 +552,55 @@ var shopquery = Vue.component('shopquery', {
                     </el-row>\
                   </el-form-item>\
                 </el-col>\
-                <el-col :span="8">\
-                  <el-form-item>\
-                    <el-button  style="margin-left:0 !important;line-height:20px !important;float:right" size="medium" type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>\
-                  </el-form-item>\
-                </el-col>\
               </el-row>\
               </el-form>\
               <template v-if="tableData&&tableData.length>0">\
                 <div class="echart">\
                   <div class="echart-wrapper" ref="echart"></div>\
                 </div>\
-                <el-row class="summuryData" :gutter="10">\
-                  <el-col :span="12">\
-                    <el-row>\
-                      <div class="statichead">月坪效：</div>\
-                      <div class="statics">{{areaeffect}}</div>\
+                <div class="cur-day w100" style="margin:.5rem auto">\
+                  <div class="wrapper">\
+                    <el-row class="summuryData" :gutter="10">\
+                      <el-col :span="12">\
+                        <el-row>\
+                          <div class="statichead">本月营业额：</div>\
+                          <div class="statics">{{summaries}}</div>\
+                        </el-row>\
+                      </el-col>\
+                      <el-col :span="12">\
+                        <el-row>\
+                          <div class="statichead">本月预算：</div>\
+                          <div class="statics">{{saletarget}}</div>\
+                        </el-row>\
+                      </el-col>\
                     </el-row>\
-                  </el-col>\
-                  <el-col :span="12">\
-                    <el-row>\
-                      <div class="statichead">客单价：</div>\
-                      <div class="statics">{{customerprice}}</div>\
+                    <el-row class="summuryData" :gutter="10">\
+                      <el-col :span="12">\
+                        <el-row>\
+                          <div class="statichead">30天月化坪效：</div>\
+                          <div class="statics">{{areaeffect}}</div>\
+                        </el-row>\
+                      </el-col>\
+                      <el-col :span="12">\
+                        <el-row>\
+                          <div class="statichead">本月预算完成率：</div>\
+                          <div class="statics">{{salerate}}</div>\
+                        </el-row>\
+                      </el-col>\
                     </el-row>\
-                  </el-col>\
-                </el-row>\
-                <el-row class="summuryData" :gutter="10">\
-                  <el-col :span="12">\
-                    <el-row>\
-                      <div class="statichead">本月营业额：</div>\
-                      <div class="statics">{{summaries}}</div>\
+                    <el-row class="summuryData" :gutter="10">\
+                      <el-col :span="12">\
+                        <el-row>\
+                          <div class="statichead">客单价：</div>\
+                          <div class="statics">{{customerprice}}</div>\
+                        </el-row>\
+                      </el-col>\
                     </el-row>\
-                  </el-col>\
-                  <el-col :span="12">\
-                    <el-row>\
-                      <div class="statichead">本月预算：</div>\
-                      <div class="statics">{{saletarget}}</div>\
-                    </el-row>\
-                  </el-col>\
-                </el-row>\
-                <el-row class="summuryData" :gutter="10">\
-                  <el-col :span="12">\
-                    <el-row>\
-                      <div class="statichead">本月预算完成率：</div>\
-                      <div class="statics">{{salerate}}</div>\
-                    </el-row>\
-                  </el-col>\
-                </el-row>\
+                  </di>\
+                  </div>\
+                </div>\
                 <div class="fktable" v-if="tableData&&tableData.length>0" ref="fktable">\
-                <div class="table-wrapper extra" ref="extraThead" :class="fixThead?\'fixed\':\'\'">\
+                <div class="table-wrapper extra" style="border-right:none;" ref="extraThead" :class="fixThead?\'fixed\':\'\'">\
                   <div class="thead">\
                     <table class="mytable mytable1">\
                       <colgroup>\
@@ -613,10 +611,10 @@ var shopquery = Vue.component('shopquery', {
                       </colgroup>\
                       <thead class="thead">\
                         <tr>\
-                          <th><div class="th">日期</div></th>\
-                          <th><div class="th">营业额</div></th>\
-                          <th><div class="th">进店人数</div></th>\
-                          <th><div class="th">客数</div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right">日期</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right">营业额</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right">进店人数</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right">客数</span></div></div></th>\
                         </tr>\
                       </thead>\
                     </table>\
@@ -632,10 +630,10 @@ var shopquery = Vue.component('shopquery', {
                     </colgroup>\
                     <thead class="thead" ref="thead">\
                       <tr>\
-                        <th><div class="th">日期</div></th>\
-                        <th><div class="th">营业额</div></th>\
-                        <th><div class="th">进店人数</div></th>\
-                        <th><div class="th">客数</div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right">日期</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right">营业额</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right">进店人数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right">客数</span></div></div></th>\
                       </tr>\
                     </thead>\
                     <tbody>\
