@@ -162,6 +162,7 @@ var statistic = Vue.component('statistic', {
     changeDate: function (val) {
       this.currentDateVal = val;
       this.currentDate = new Date(val);
+      this.getLightInfo();
       this.getList();
       this.getShopByTop();
       this.getStaticsTop();
@@ -184,9 +185,9 @@ var statistic = Vue.component('statistic', {
         cache: false,
         async: false,
         data: {
-          "v": "getstaticstop",
+          "v": "getlightboxinfo",
           "openid": window.sessionStorage.Global_openid,
-          "day": _self.year,
+          "date": _self.currentDateVal,
           "MallID": _self.mallid,
           "r": Math.random() * 10000
         },
@@ -206,7 +207,7 @@ var statistic = Vue.component('statistic', {
         success: function (res) {
           layer.close(layerindex)
           if (res.ErrorCode == 0) {
-            _self.staticsData = res.Data;
+            _self.lightBoxInfo = res.Data;
           }
         }
       });
