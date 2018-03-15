@@ -154,6 +154,7 @@ var statistic = Vue.component('statistic', {
     changeMall: function (val) {
       this.mallid = val.split('|')[1];
       console.log(this.mallid)
+      this.getLightInfo();
       this.getList();
       this.getShopByTop();
       this.getStaticsTop();
@@ -768,7 +769,7 @@ var statistic = Vue.component('statistic', {
                       <p class="pragrah">\
                         <span class="ph">总营业额:</span>\
                         <i class="light" @click="toggleInfo"\
-                        :class="lightBoxInfo.state == 0?\'red\':lightBoxInfo.state == 1?\'base\':\'red\'"></i>\
+                        :class="lightBoxInfo.state == 0?\'red\':lightBoxInfo.state == 1?\'base\':\'green\'"></i>\
                         <span class="pb">{{comdify(Math.round(staticsData.day_sales))}}</span>\
                       </p>\
                       <p class="pragrah">\
