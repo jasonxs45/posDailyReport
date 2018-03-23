@@ -137,18 +137,14 @@ var shopquery = Vue.component('shopquery', {
       }
     })
     if(this.$route.params.v){
-      console.log(this.$route.params)
       this.mallid = this.form.mallid = this.$route.params.Mallid;
       this.market = this.form.mallid == 1?'新天地':this.form.mallid == 2?'壹方':'';
-      console.log(this.mallid)
-      console.log(this.form.mallid)
-      console.log(this.market)
+      this.shops = [this.$route.params.ShopName+'|'+this.$route.params.ID];
       this.form.floor =this.$route.params.floor;
       this.form.operationcategory =this.$route.params.operationcategory;
       this.form.shop =this.$route.params.ShopName+'|'+this.$route.params.ID;
       this.form.year=this.$route.params.Y.toString();
       this.form.month = this.$route.params.M<=9?this.form.year + '-0'+this.$route.params.M.toString():this.form.year + '-'+this.$route.params.M.toString();
-      console.log(this.form)
       this.initWithQuery();
     }else{
       // this.initRelatedQuery();
@@ -202,6 +198,7 @@ var shopquery = Vue.component('shopquery', {
       this.getFloors();
       this.getStates();
       this.getShops();
+      // this.shops = 
     },
     getFloors: function () {
       var _self = this;
@@ -284,7 +281,6 @@ var shopquery = Vue.component('shopquery', {
     getShops:function(){
       var _self = this;
       var layerindex = null;
-      this.form.shop = '';
       this.tableData = null;
       $.ajax({
         url: "webserver/ShopPosService.aspx",
@@ -325,6 +321,9 @@ var shopquery = Vue.component('shopquery', {
     getShopId:function(val){
       var index = val.split('+')[1];
       this.onSubmit();
+    },
+    clearShop: function () {
+      this.form.shop = ''
     },
     onSubmit() {
       var _self = this;
@@ -512,7 +511,7 @@ var shopquery = Vue.component('shopquery', {
                 </el-col>\
                 <el-col :span="12">\
                   <el-form-item label="楼层/位置">\
-                    <el-select v-model="form.floor" placeholder="请选择" style="width: 100%;" @change="getShops">\
+                    <el-select v-model="form.floor" placeholder="请选择" style="width: 100%;" @change="clearShop();getShops();">\
                       <el-option v-for="(item,index) in floors" :label="item.Location" :value="item.Location" key="floor-{{index}}"></el-option>\
                     </el-select>\
                   </el-form-item>\
@@ -521,7 +520,7 @@ var shopquery = Vue.component('shopquery', {
               <el-row :gutter="0">\
                 <el-col :span="12">\
                   <el-form-item label="租户业态">\
-                    <el-select v-model="form.operationcategory" placeholder="请选择" style="width: 100%;" @change="getShops">\
+                    <el-select v-model="form.operationcategory" placeholder="请选择" style="width: 100%;" @change="clearShop();getShops();">\
                       <el-option v-for="(item,index) in states" :label="item.OperationCategory" :value="item.OperationCategory" key="floor-{{index}}"></el-option>\
                     </el-select>\
                   </el-form-item>\
@@ -604,17 +603,19 @@ var shopquery = Vue.component('shopquery', {
                   <div class="thead">\
                     <table class="mytable mytable1">\
                       <colgroup>\
-                        <col width="25%" />\
-                        <col width="25%" />\
-                        <col width="25%" />\
-                        <col width="25%" />\
+                        <col width="20%" />\
+                        <col width="18%" />\
+                        <col width="12%" />\
+                        <col width="12%" />\
+                        <col width="38%" />\
                       </colgroup>\
                       <thead class="thead">\
                         <tr>\
-                          <th><div class="th"><div class="wrap"><span class="right">日期</span></div></div></th>\
-                          <th><div class="th"><div class="wrap"><span class="right">营业额</span></div></div></th>\
-                          <th><div class="th"><div class="wrap"><span class="right">进店人数</span></div></div></th>\
-                          <th><div class="th"><div class="wrap"><span class="right">客数</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right tc">日期</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right tc">营业额</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right tc">进店<br/>人数</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right tc">客数</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span class="right tc">备注</span></div></div></th>\
                         </tr>\
                       </thead>\
                     </table>\
@@ -623,17 +624,19 @@ var shopquery = Vue.component('shopquery', {
                 <div class="table-wrapper" ref="baseTable">\
                   <table class="mytable mytable1">\
                     <colgroup>\
-                      <col width="25%" />\
-                      <col width="25%" />\
-                      <col width="25%" />\
-                      <col width="25%" />\
+                      <col width="20%" />\
+                      <col width="18%" />\
+                      <col width="12%" />\
+                      <col width="12%" />\
+                      <col width="38%" />\
                     </colgroup>\
                     <thead class="thead" ref="thead">\
                       <tr>\
-                        <th><div class="th"><div class="wrap"><span class="right">日期</span></div></div></th>\
-                        <th><div class="th"><div class="wrap"><span class="right">营业额</span></div></div></th>\
-                        <th><div class="th"><div class="wrap"><span class="right">进店人数</span></div></div></th>\
-                        <th><div class="th"><div class="wrap"><span class="right">客数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right tc">日期</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right tc">营业额</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right tc">进店<br/>人数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right tc">客数</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span class="right tc">备注</span></div></div></th>\
                       </tr>\
                     </thead>\
                     <tbody>\
@@ -642,6 +645,7 @@ var shopquery = Vue.component('shopquery', {
                         <td><div>{{item.GrossSales}}</div></td>\
                         <td><div>{{item.CustomerNum}}</div></td>\
                         <td><div>{{item.CustomerOrders}}</div></td>\
+                        <td><div class="tl">{{item.Remarks}}</div></td>\
                       </tr>\
                      </tbody>\
                   </table>\

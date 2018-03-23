@@ -343,7 +343,6 @@ var marketquery = Vue.component('marketquery', {
       var _self = this;
       var shopid = event.currentTarget.dataset.shopid;
       var shopname = event.currentTarget.dataset.shopname;
-      console.log(event.currentTarget.dataset)
       this.$router.push({
         name: 'shopquery',
         params: {
@@ -463,6 +462,7 @@ var marketquery = Vue.component('marketquery', {
                         <col width="50px" />\
                         <col width="50px" />\
                         <col width="70px" />\
+                        <col width="130px" />\
                       </colgroup>\
                       <thead class="thead">\
                         <tr>\
@@ -502,6 +502,7 @@ var marketquery = Vue.component('marketquery', {
                           <th><div class="th"><div class="wrap"><span>进店<br/>人数</span></div></div></th>\
                           <th><div class="th"><div class="wrap"><span>客数</span></div></div></th>\
                           <th><div class="th"><div class="wrap"><span>客单价</span></div></div></th>\
+                          <th><div class="th"><div class="wrap"><span>备注</span></div></div></th>\
                         </tr>\
                       </thead>\
                     </table>\
@@ -518,6 +519,7 @@ var marketquery = Vue.component('marketquery', {
                       <col width="50px" />\
                       <col width="50px" />\
                       <col width="70px" />\
+                      <col width="130px" />\
                     </colgroup>\
                     <thead class="thead" ref="thead">\
                       <tr>\
@@ -557,11 +559,12 @@ var marketquery = Vue.component('marketquery', {
                         <th><div class="th"><div class="wrap"><span>进店<br/>人数</span></div></div></th>\
                         <th><div class="th"><div class="wrap"><span>客数</span></div></div></th>\
                         <th><div class="th"><div class="wrap"><span>客单价</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span>备注</span></div></div></th>\
                       </tr>\
                     </thead>\
                     <tbody>\
                       <tr v-for="(item,index) in calcTableDate">\
-                        <td><div>{{item.ShopName}}</div></td>\
+                        <td @click="rowClick" :data-ShopName="item.ShopName" :data-ShopID="item.ShopID"><div>{{item.ShopName}}</div></td>\
                         <td><div>{{item.GrossSales}}</div></td>\
                         <td><div>{{item.MonthGrossSales}}</div></td>\
                         <td><div>{{item.SalesTarget}}</div></td>\
@@ -569,6 +572,7 @@ var marketquery = Vue.component('marketquery', {
                         <td><div>{{item.CustomerNum}}</div></td>\
                         <td><div>{{item.CustomerOrders}}</div></td>\
                         <td><div>{{item.CustomerPrice}}</div></td>\
+                        <td class="tl"><div>{{item.Remarks}}</div></td>\
                       </tr>\
                      </tbody>\
                   </table>\
@@ -584,6 +588,7 @@ var marketquery = Vue.component('marketquery', {
                       <col width="50px" />\
                       <col width="50px" />\
                       <col width="70px" />\
+                      <col width="130px" />\
                     </colgroup>\
                     <thead class="thead">\
                       <tr>\
@@ -623,11 +628,12 @@ var marketquery = Vue.component('marketquery', {
                         <th><div class="th"><div class="wrap"><span>进店<br/>人数</span></div></div></th>\
                         <th><div class="th"><div class="wrap"><span>客数</span></div></div></th>\
                         <th><div class="th"><div class="wrap"><span>客单价</span></div></div></th>\
+                        <th><div class="th"><div class="wrap"><span>备注</span></div></div></th>\
                       </tr>\
                     </thead>\
                     <tbody>\
                       <tr v-for="(item,index) in calcTableDate">\
-                        <td><div>{{item.ShopName}}</div></td>\
+                        <td @click="rowClick" :data-ShopName="item.ShopName" :data-ShopID="item.ShopID"><div>{{item.ShopName}}</div></td>\
                         <td><div>{{item.GrossSales}}</div></td>\
                         <td><div>{{item.MonthGrossSales}}</div></td>\
                         <td><div>{{item.SalesTarget}}</div></td>\
@@ -635,6 +641,7 @@ var marketquery = Vue.component('marketquery', {
                         <td><div>{{item.CustomerNum}}</div></td>\
                         <td><div>{{item.CustomerOrders}}</div></td>\
                         <td><div>{{item.CustomerPrice}}</div></td>\
+                        <td class="tl"><div>{{item.Remarks}}</div></td>\
                       </tr>\
                      </tbody>\
                   </table>\

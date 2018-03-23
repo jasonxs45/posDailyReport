@@ -40,10 +40,10 @@ var statistic = Vue.component('statistic', {
   data: function () {
     return {
       lightBoxInfo: {
-        workdayRange: [1231231313, 1531231313],
-        weekendRange: [1231231313, 1531231313],
+        workdayRange: [0, 0],
+        weekendRange: [0, 0],
         state: 0,
-        info: '依据依据依据依据依据'
+        info: ''
       },
       showInfo: false,
       mallid: 2,
@@ -774,7 +774,7 @@ var statistic = Vue.component('statistic', {
                       </p>\
                       <p class="pragrah">\
                         <span class="ph">开业面积:</span>\
-                        <span class="pb">{{comdify(staticsData.all_area)}}</span>\
+                        <span class="pb">{{comdify(Math.round(staticsData.all_area))}}</span>\
                       </p>\
                       <p class="pragrah">\
                         <span class="ph">30天月化坪效:</span>\
@@ -809,7 +809,7 @@ var statistic = Vue.component('statistic', {
                   </p>\
                   <p class="pragrah">\
                     <span class="ph">总销售:</span>\
-                    <span class="pb">{{comdify(staticsData.month_sales)}}</span>\
+                    <span class="pb">{{comdify(Math.round(staticsData.month_sales))}}</span>\
                   </p>\
                   <p class="pragrah">\
                     <span class="ph">总体完成率:</span>\
@@ -826,7 +826,7 @@ var statistic = Vue.component('statistic', {
                   </p>\
                   <p class="pragrah">\
                     <span class="ph">总销售:</span>\
-                    <span class="pb">{{comdify(staticsData.year_sales)}}</span>\
+                    <span class="pb">{{comdify(Math.round(staticsData.year_sales))}}</span>\
                   </p>\
                   <p class="pragrah">\
                     <span class="ph">总体完成率:</span>\

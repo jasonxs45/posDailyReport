@@ -590,7 +590,7 @@ body {
 }
 
 .mytable {
-  width: 570px
+  width: 700px
 }
 
 .mytable1 {
@@ -604,7 +604,7 @@ body {
   border-bottom: 1px solid #ddd;
   background: #fff;
   color: #333;
-  line-height: 1;
+  line-height: 1.4;
   vertical-align: middle;
 }
 
@@ -632,6 +632,12 @@ body {
   text-align: right;
   display:block;
   width:100%;
+}
+.mytable  .tc{
+  text-align: center !important;
+}
+.mytable  .tl{
+  text-align: left !important;
 }
 .mytable th div.th .wrap .carets{
   height: 100%;
