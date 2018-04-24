@@ -385,6 +385,40 @@ body {
   font-weight: 600;
   color: #333;
 }
+.dottit{
+  font-size: .6rem;
+  font-weight: 600;
+  color: #f28227;
+  margin: 20px 0 0;
+}
+.dottit:before{
+  content: '';
+  width: .5rem;
+  height: .5rem;
+  display: inline-block;
+  border-radius: 50%;
+  background: #f28227;
+  margin-right: 5px;
+}
+.table{
+  width: 100%;
+  font-size: .5rem;
+}
+.table th,
+.table td{
+  border-bottom: 1px solid #f0f0f0;
+  text-align: right;
+  color: #666;
+  font-size: 12px;
+  padding:10px 5px;
+}
+.table th:first-child,
+.table td:first-child{
+  text-align: left;
+}
+.table th {
+  font-weight: 600;
+}
 
 .flex {
   display: -webkit-box;
@@ -429,8 +463,8 @@ body {
 
 .pragrah .light {
   display: block;
-  width: .8rem;
-  height: .8rem;
+  width: .7rem;
+  height: .7rem;
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -463,6 +497,9 @@ body {
 }
 
 .pragrah .light +.pb {
+  padding-right: 1rem;
+}
+.pragrah .pb.pr{
   padding-right: 1rem;
 }
 

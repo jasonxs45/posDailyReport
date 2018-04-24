@@ -70,6 +70,8 @@ var statistic = Vue.component('statistic', {
       tableData: [],
       staticsData: [],
       echartXlabels: [],
+      typeTableData: [],
+      mainTableData: [],
       weekData: {
         cwdata: [],
         lwdata: []
@@ -109,6 +111,8 @@ var statistic = Vue.component('statistic', {
     this.getShopByTop();
     this.getStaticsTop();
     this.getWeekStatistic(this.currentDateVal);
+    this.getTypeState();
+    this.getMainState();
   },
   mounted: function () {
     var _self = this;
@@ -159,6 +163,8 @@ var statistic = Vue.component('statistic', {
       this.getShopByTop();
       this.getStaticsTop();
       this.getWeekStatistic(this.currentDateVal);
+      this.getTypeState();
+      this.getMainState();
     },
     changeDate: function (val) {
       this.currentDateVal = val;
@@ -168,6 +174,8 @@ var statistic = Vue.component('statistic', {
       this.getShopByTop();
       this.getStaticsTop();
       this.getWeekStatistic(this.currentDateVal);
+      this.getTypeState();
+      this.getMainState();
       this.$nextTick(function () {
         // this.initEcharts(cwdata, lwdata)
       })
@@ -175,6 +183,92 @@ var statistic = Vue.component('statistic', {
     selectRank: function (event) {
       this.top = event.target.value;
       this.getShopByTop();
+    },
+    getTypeState: function () {
+      var _self = this;
+      var layerindex = null;
+      $.ajax({
+        url: "webserver/ShopPosService.aspx",
+        type: "post",
+        dataType: 'json',
+        cache: false,
+        async: false,
+        data: {
+          "v": "GetOperationTable",
+          "openid": window.sessionStorage.Global_openid,
+          "day": _self.currentDateVal,
+          "MallID": _self.mallid,
+          "r": Math.random() * 10000
+        },
+        beforeSend: function () {
+          layerindex = layer.open({
+            type: 2,
+            content: '加载中',
+            shadeClose: false
+          });
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          layer.close(layerindex)
+        },
+        fail: function () {
+          layer.close(layerindex)
+        },
+        success: function (res) {
+          layer.close(layerindex)
+          if (res.ErrorCode == 0) {
+            var tabledata = res.Data.List
+            for (var i = 0; i < tabledata.length; i++) {
+              for (var j = 0; j < tabledata[i].length; j++) {
+                tabledata[i][j] = typeof tabledata[i][j] === 'number' ? comdify(tabledata[i][j]) : tabledata[i][j]
+              }
+            }
+            _self.typeTableData = tabledata
+          }
+        }
+      });
+    },
+    getMainState: function () {
+      var _self = this;
+      var layerindex = null;
+      $.ajax({
+        url: "webserver/ShopPosService.aspx",
+        type: "post",
+        dataType: 'json',
+        cache: false,
+        async: false,
+        data: {
+          "v": "GetMainShopsTable",
+          "openid": window.sessionStorage.Global_openid,
+          "day": _self.currentDateVal,
+          "MallID": _self.mallid,
+          "r": Math.random() * 10000
+        },
+        beforeSend: function () {
+          layerindex = layer.open({
+            type: 2,
+            content: '加载中',
+            shadeClose: false
+          });
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          layer.close(layerindex)
+        },
+        fail: function () {
+          layer.close(layerindex)
+        },
+        success: function (res) {
+          layer.close(layerindex)
+          if (res.ErrorCode == 0) {
+            var tabledata = res.Data.List
+            for (var i = 0; i < tabledata.length; i++) {
+              for (var j = 0; j < tabledata[i].length; j++) {
+                tabledata[i][j] = typeof tabledata[i][j] === 'number' ? comdify(tabledata[i][j]) : tabledata[i][j]
+              }
+            }
+            _self.mainTableData = tabledata
+          }
+        }
+      });
     },
     getLightInfo: function () {
       var _self = this;
@@ -764,6 +858,7 @@ var statistic = Vue.component('statistic', {
                   星期{{weekday|fweekday}}&nbsp;\
                   天气：{{staticsData.weather}}</span>\
                   </h3>\
+                  <h4 class="dottit">整体情况</h4>\
                   <div class="flex" style="margin-left:-.3rem;margin-right:-.3rem;">\
                     <div class="cur-day">\
                       <p class="pragrah">\
@@ -774,11 +869,11 @@ var statistic = Vue.component('statistic', {
                       </p>\
                       <p class="pragrah">\
                         <span class="ph">开业面积:</span>\
-                        <span class="pb">{{comdify(Math.round(staticsData.all_area))}}</span>\
+                        <span class="pb pr">{{comdify(Math.round(staticsData.all_area))}}</span>\
                       </p>\
                       <p class="pragrah">\
                         <span class="ph">30天月化坪效:</span>\
-                        <span class="pb">{{comdify(Math.round(staticsData.day_sales/staticsData.all_area*30))}}</span>\
+                        <span class="pb pr">{{comdify(Math.round(staticsData.day_sales/staticsData.all_area*30))}}</span>\
                       </p>\
                     </div>\
                     <div class="cur-day">\
@@ -796,6 +891,38 @@ var statistic = Vue.component('statistic', {
                       </p>\
                     </div>\
                   </div>\
+                  <h4 class="dottit">业态情况</h4>\
+                  <table class="table">\
+                    <thead>\
+                      <tr>\
+                        <th></th>\
+                        <th>面积(㎡)</th>\
+                        <th>营业额(元)</th>\
+                        <th>月化坪效(元/㎡)</th>\
+                      </tr>\
+                    </thead>\
+                    <tbody>\
+                      <tr v-for="(tr, index) in typeTableData">\
+                        <td v-for="(td, index1) in tr">{{td}}</td>\
+                      </tr>\
+                    </tbody>\
+                  </table>\
+                  <h4 class="dottit">主力店情况</h4>\
+                  <table class="table">\
+                    <thead>\
+                      <tr>\
+                        <th></th>\
+                        <th>面积(㎡)</th>\
+                        <th>营业额(元)</th>\
+                        <th>月化坪效(元/㎡)</th>\
+                      </tr>\
+                    </thead>\
+                    <tbody>\
+                      <tr v-for="(tr, index) in mainTableData">\
+                        <td v-for="(td, index1) in tr">{{td}}</td>\
+                      </tr>\
+                    </tbody>\
+                  </table>\
                 </div>\
               </div>\
             </div>\
@@ -859,6 +986,11 @@ var statistic = Vue.component('statistic', {
                 <div class="nodata" style="margin:.5rem;">尚无信息</div>\
               </template>\
             </div>\
+            <div class="maintit">备注信息</div>\
+            <div class="weui_cells_title extrainfo">\
+              <p  v-if="staticsData.remark" class="" v-html="staticsData.remark"></p>\
+              <div v-else class="nodata">尚无信息</div>\
+            </div>\
             <div class="maintit">当月预算完成情况</div>\
             <div id="listMonthlySaleLog" style="text-align: right;">\
               <template v-if="tableData.length>0">\
@@ -888,11 +1020,6 @@ var statistic = Vue.component('statistic', {
             <div class="maintit">本周上周对比</div>\
             <div class="echart">\
               <div class="echart-wrapper" ref="echart"></div>\
-            </div>\
-            <div class="maintit">备注信息</div>\
-            <div class="weui_cells_title extrainfo">\
-              <p  v-if="staticsData.remark" class="" v-html="staticsData.remark"></p>\
-              <div v-else class="nodata">尚无信息</div>\
             </div>\
             <div class="light-box-info" v-show="showInfo"  @click="toggleInfo">\
               <div class="flex">\
