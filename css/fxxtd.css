@@ -406,13 +406,28 @@ body {
 .table td{
   border-bottom: 1px solid #f0f0f0;
   text-align: right;
-  color: #666;
-  font-size: 12px;
+  color: #000;
+  font-size: .5rem;
   padding:10px 5px;
 }
 .table th:first-child,
 .table td:first-child{
   text-align: left;
+}
+.table td strong{
+  font-weight: 700;
+}
+.table th:nth-child(3),
+.table td:nth-child(3){
+  width: 25%;
+}
+.table th:nth-child(2),
+.table td:nth-child(2){
+  width: 20%;
+}
+.table th:nth-child(4),
+.table td:nth-child(4){
+  width: 30%;
 }
 .table th {
   font-weight: 600;

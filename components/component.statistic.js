@@ -919,7 +919,7 @@ var statistic = Vue.component('statistic', {
                     </thead>\
                     <tbody>\
                       <tr v-for="(tr, index) in mainTableData">\
-                        <td v-for="(td, index1) in tr">{{td}}</td>\
+                        <td v-for="(td, index1) in tr" v-html="index === mainTableData.length - 1 ? \'<strong>\'+td+\'</strong>\' : td"></td>\
                       </tr>\
                     </tbody>\
                   </table>\

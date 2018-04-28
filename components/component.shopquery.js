@@ -293,6 +293,7 @@ var shopquery = Vue.component('shopquery', {
           "MallID": _self.form.mallid,
           "Floor": _self.form.floor == '全部' ? '' : _self.form.floor,
           "OperationCategory": _self.form.operationcategory == '全部' ? '' : _self.form.operationcategory,
+          "Date": new Date(_self.form.year).getFullYear()+'/'+(new Date(_self.form.month).getMonth()+1),
           "r": Math.random() * 10000
         },
         beforeSend:function(){
